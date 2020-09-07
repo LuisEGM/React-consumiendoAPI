@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Loader from './loader.jsx';
+import Loader from './loader';
 
 const App = () => {
 
