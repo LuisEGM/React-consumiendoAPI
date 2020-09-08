@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import Loader from './loader';
 
-const App = () => {
+// Implementando redux
+import { connect } from 'react-redux';
 
-    const [users,setUsers] = useState([]);
-    const [loader,setLoader] = useState(true);
+const App = ({dataUsers, loader, setDataUsers, setLoader}) => {
     
     useEffect(() => {
         fetchData();
@@ -29,7 +29,7 @@ const App = () => {
             let data = await fetch('https://jsonplaceholder.typicode.com/users?_limit=10');
             let dataParse = await data.json();
             let resolve = extractData(dataParse);
-            setUsers(resolve);
+            setDataUsers(resolve);
             setLoader(false);
         } catch (error) {
             console.log(error.message);
@@ -39,7 +39,7 @@ const App = () => {
 
 
     const printfTableBody = () => {
-        return users.map((elem,i) => (
+        return dataUsers.map((elem,i) => (
             <tr key={i} className="text-center">
                 <td>{elem.id}</td>
                 <td>{elem.username}</td>
@@ -78,4 +78,27 @@ const App = () => {
     return render();
 }
 
-export default App;
+const mapStateToProps = state => ({
+    dataUsers: state.dataUsers,
+    loader: state.loader
+})
+
+const mapDispatchToProps = dispatch => ({
+
+    setDataUsers: data => {
+        dispatch({
+            type: "SET_DATA_USERS",
+            data
+        })
+    },
+
+    setLoader: stateLoader => {
+        dispatch({
+            type: "SET_LOADER",
+            stateLoader
+        })
+    }
+
+})
+
+export default connect(mapStateToProps,mapDispatchToProps)(App);
